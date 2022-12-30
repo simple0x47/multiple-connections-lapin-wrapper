@@ -1,8 +1,5 @@
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        let result = 2 + 2;
-        assert_eq!(result, 4);
-    }
-}
+mod amqp_connect_config;
+mod amqp_wrapper;
+mod error;
+mod state;
+mod tests;

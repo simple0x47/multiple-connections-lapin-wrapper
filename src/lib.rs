@@ -1,5 +1,5 @@
-mod amqp_connect_config;
-mod amqp_wrapper;
-mod error;
-mod state;
+pub mod amqp_connect_config;
+pub mod amqp_wrapper;
+pub mod error;
+pub mod state;
 mod tests;

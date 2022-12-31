@@ -3,7 +3,7 @@ use std::fmt;
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub enum ErrorKind {
     InternalFailure,
-    AutoConfigFailure,
+    ConfigFailure,
     StateUpdateFailure,
 }
 

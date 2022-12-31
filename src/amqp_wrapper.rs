@@ -36,6 +36,7 @@ impl From<Connection> for WrappedConnection {
     }
 }
 
+/// Wrapper around lapin.rs that works only with Tokio.
 pub struct AmqpWrapper {
     connections: Vec<WrappedConnection>,
     channels_per_connection: HashMap<String, Vec<Weak<Channel>>>,

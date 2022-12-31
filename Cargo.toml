@@ -11,9 +11,15 @@ description = "Lapin wrapper for making AMQP connections easier to manage in Coo
 
 # Async runtime
 tokio = { version = "1", features = ["full"] }
+tokio-executor-trait = "2.1"
+tokio-reactor-trait = "1.1"
 async-recursion = "1.0"
 
 lapin = "2.1"
+
+# Third party dependencies
+serde = { version = "1.0.141", features = ["derive"] }
+serde_json = "1.0.82"
 
 [dependencies.uuid]
 version = "1.1.2"

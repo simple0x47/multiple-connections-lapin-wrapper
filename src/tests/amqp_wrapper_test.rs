@@ -4,9 +4,7 @@ use std::sync::Arc;
 use lapin::{tcp::OwnedTLSConfig, Channel, ConnectionProperties};
 use tokio::sync::watch;
 
-use crate::{
-    amqp_connect_config::AmqpConnectConfig, amqp_wrapper::AmqpWrapper, error::Error, state::State,
-};
+use crate::{amqp_connect_config::AmqpConnectConfig, amqp_wrapper::AmqpWrapper, state::State};
 
 #[cfg(test)]
 
@@ -39,11 +37,11 @@ fn initialize_rabbitmq() {
 async fn create_channels(amqp_wrapper: &mut AmqpWrapper, amount: usize) -> Vec<Arc<Channel>> {
     let mut channels: Vec<Arc<Channel>> = Vec::new();
 
-    for i in 0..amount {
-        let channel = match amqp_wrapper.try_get_channel().await {
+    for _ in 0..amount {
+        match amqp_wrapper.try_get_channel().await {
             Ok(channel) => channels.push(channel),
             Err(error) => panic!("failed to get channel: {}", error),
-        };
+        }
     }
 
     channels

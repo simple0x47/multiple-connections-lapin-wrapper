@@ -117,9 +117,7 @@ fn get_connection_properties_from_json_object(
     Ok(properties)
 }
 
-fn get_identity_from_json_object(
-    mut object: &mut Map<String, Value>,
-) -> Result<OwnedIdentity, Error> {
+fn get_identity_from_json_object(object: &mut Map<String, Value>) -> Result<OwnedIdentity, Error> {
     let encoded_identity = match object.remove(DER_ENCODED_IDENTITY_KEY) {
         Some(value) => match serde_json::from_value::<Vec<u8>>(value) {
             Ok(encoded_identity) => encoded_identity,
@@ -177,7 +175,7 @@ fn get_identity_from_json_object(
 }
 
 fn get_owned_tls_config_from_json_object(
-    mut object: Map<String, Value>,
+    object: &mut Map<String, Value>,
 ) -> Result<OwnedTLSConfig, Error> {
     let mut json_identity = match object.remove(IDENTITY_KEY) {
         Some(value) => match serde_json::from_value::<Map<String, Value>>(value) {
@@ -312,10 +310,11 @@ impl<'de> Deserialize<'de> for AmqpConnectConfig {
                                 ));
                             }
 
-                            let json_owned_tls_config = map.next_value::<Map<String, Value>>()?;
+                            let mut json_owned_tls_config =
+                                map.next_value::<Map<String, Value>>()?;
 
                             owned_tls_config = match get_owned_tls_config_from_json_object(
-                                json_owned_tls_config,
+                                &mut json_owned_tls_config,
                             ) {
                                 Ok(owned_tls_config) => Some(owned_tls_config),
                                 Err(error) => return Err(serde::de::Error::custom(error.message)),

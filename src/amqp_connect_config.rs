@@ -358,7 +358,7 @@ async fn deserialize_correctly_from_without_owned_tls_config() {
                             "owned_tls_config": {}
                         }"#;
 
-    let config = match serde_json::from_str::<AmqpConnectConfig>(json) {
+    match serde_json::from_str::<AmqpConnectConfig>(json) {
         Ok(config) => config,
         Err(error) => panic!("failed to deserialize amqp connect config: {}", error),
     };
@@ -388,7 +388,6 @@ async fn deserialize_correctly_from_complete_config() {
     };
 
     let uri = config.uri;
-    let options = config.options;
     let identity = config.owned_tls_config.identity.unwrap();
 
     assert_eq!(&uri, "amqp://guest:guest@127.0.0.1:5672");

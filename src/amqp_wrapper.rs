@@ -51,10 +51,10 @@ impl AmqpWrapper {
     ) -> Result<AmqpWrapper, Error> {
         match state_sender.send(State::Idle) {
             Ok(_) => (),
-            Err(error) => {
+            Err(_) => {
                 return Err(Error::new(
                     ErrorKind::StateUpdateFailure,
-                    format!("failed to update state"),
+                    "failed to update state",
                 ))
             }
         }
@@ -95,7 +95,7 @@ impl AmqpWrapper {
             None => {
                 return Err(Error::new(
                     ErrorKind::InternalFailure,
-                    format!("failed to get previously created connection"),
+                    "failed to get previously created connection",
                 ))
             }
         };
@@ -104,7 +104,7 @@ impl AmqpWrapper {
     }
 
     async fn get_connection(&mut self) -> Result<&WrappedConnection, Error> {
-        if self.connections.len() == 0 {
+        if self.connections.is_empty() {
             return self.try_connect().await;
         }
 
@@ -113,9 +113,7 @@ impl AmqpWrapper {
             None => {
                 let error = Error::new(
                     ErrorKind::InternalFailure,
-                    format!(
-                    "failed to get last connection after checking there are available connections"
-                ),
+                    "failed to get last connection after checking there are available connections",
                 );
 
                 self.state_sender.send(State::Error(error.clone()));
@@ -165,7 +163,7 @@ impl AmqpWrapper {
             Err(_) => {
                 return Err(Error::new(
                     ErrorKind::StateUpdateFailure,
-                    format!("failed to update state"),
+                    "failed to update state",
                 ))
             }
         }
@@ -181,7 +179,7 @@ impl AmqpWrapper {
         // clean connections that have no channels alive
         self.clean_connections_and_channels().await;
 
-        return result;
+        result
     }
 
     async fn clean_connections_and_channels(&mut self) {
@@ -197,11 +195,7 @@ impl AmqpWrapper {
         }
 
         self.connections.retain(|wrapped_connection| {
-            if empty_connection_ids.contains(&wrapped_connection.id.as_str()) {
-                false
-            } else {
-                true
-            }
+            !empty_connection_ids.contains(&wrapped_connection.id.as_str())
         });
     }
 }

@@ -21,7 +21,7 @@ const DER_ENCODED_IDENTITY_KEY: &str = "der";
 const DECRYPTION_PASSWORD_KEY: &str = "password";
 const CERTIFICATES_CHAIN_KEY: &str = "cert_chain";
 
-const EXPECTED_FIELDS: &'static [&'static str] = &[URI_KEY, OPTIONS_KEY, OWNED_TLS_CONFIG_KEY];
+const EXPECTED_FIELDS: &[&str] = &[URI_KEY, OPTIONS_KEY, OWNED_TLS_CONFIG_KEY];
 
 pub struct AmqpConnectConfig {
     uri: String,

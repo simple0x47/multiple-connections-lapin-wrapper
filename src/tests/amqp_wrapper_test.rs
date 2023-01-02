@@ -4,7 +4,8 @@ use std::sync::Arc;
 use lapin::{tcp::OwnedTLSConfig, Channel, ConnectionProperties};
 use tokio::sync::watch;
 
-use crate::{amqp_connect_config::AmqpConnectConfig, amqp_wrapper::AmqpWrapper, state::State};
+use crate::config::amqp_connect_config::AmqpConnectConfig;
+use crate::{amqp_wrapper::AmqpWrapper, state::State};
 
 #[cfg(test)]
 

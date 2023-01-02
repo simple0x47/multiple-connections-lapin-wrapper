@@ -177,7 +177,7 @@ fn get_identity_from_json_object(object: &mut Map<String, Value>) -> Result<Owne
 fn get_owned_tls_config_from_json_object(
     object: &mut Map<String, Value>,
 ) -> Result<OwnedTLSConfig, Error> {
-    let mut json_identity = match object.remove(IDENTITY_KEY) {
+    let json_identity = match object.remove(IDENTITY_KEY) {
         Some(value) => match serde_json::from_value::<Map<String, Value>>(value) {
             Ok(json_identity) => Some(json_identity),
             Err(error) => {

@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize)]
 pub struct AmqpOutputApiConsumer {
+    id: String,
     queue_name: String,
     qos: AmqpQos,
     consume: AmqpConsume,
@@ -13,6 +14,10 @@ pub struct AmqpOutputApiConsumer {
 }
 
 impl AmqpOutputApiConsumer {
+    pub fn id(&self) -> &str {
+        &self.id
+    }
+
     pub fn queue_name(&self) -> &str {
         &self.queue_name
     }

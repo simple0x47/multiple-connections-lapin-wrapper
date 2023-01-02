@@ -4,11 +4,16 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize)]
 pub struct AmqpOutputApi {
+    id: String,
     queue: AmqpQueue,
     publish: AmqpPublish,
 }
 
 impl AmqpOutputApi {
+    pub fn id(&self) -> &str {
+        &self.id
+    }
+
     pub fn queue(&self) -> &AmqpQueue {
         &self.queue
     }

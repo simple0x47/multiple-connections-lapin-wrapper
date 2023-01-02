@@ -7,3 +7,13 @@ pub struct ApiConsumer {
     input: Vec<AmqpInputApiConsumer>,
     output: Vec<AmqpOutputApiConsumer>,
 }
+
+impl ApiConsumer {
+    pub fn input(&self) -> &[AmqpInputApiConsumer] {
+        &self.input
+    }
+
+    pub fn output(&self) -> &[AmqpOutputApiConsumer] {
+        &self.output
+    }
+}

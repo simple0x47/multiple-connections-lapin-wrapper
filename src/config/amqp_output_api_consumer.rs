@@ -11,3 +11,25 @@ pub struct AmqpOutputApiConsumer {
     acknowledge: BasicAckOptions,
     reject: BasicRejectOptions,
 }
+
+impl AmqpOutputApiConsumer {
+    pub fn queue_name(&self) -> &str {
+        &self.queue_name
+    }
+
+    pub fn qos(&self) -> &AmqpQos {
+        &self.qos
+    }
+
+    pub fn consume(&self) -> &AmqpConsume {
+        &self.consume
+    }
+
+    pub fn acknowledge(&self) -> &BasicAckOptions {
+        &self.acknowledge
+    }
+
+    pub fn reject(&self) -> &BasicRejectOptions {
+        &self.reject
+    }
+}

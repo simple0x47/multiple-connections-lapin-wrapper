@@ -8,3 +8,17 @@ pub struct AmqpPublish {
     options: BasicPublishOptions,
     properties: FieldTable,
 }
+
+impl AmqpPublish {
+    pub fn exchange(&self) -> &str {
+        &self.exchange
+    }
+
+    pub fn options(&self) -> &BasicPublishOptions {
+        &self.options
+    }
+
+    pub fn properties(&self) -> &FieldTable {
+        &self.properties
+    }
+}

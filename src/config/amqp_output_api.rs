@@ -7,3 +7,13 @@ pub struct AmqpOutputApi {
     queue: AmqpQueue,
     publish: AmqpPublish,
 }
+
+impl AmqpOutputApi {
+    pub fn queue(&self) -> &AmqpQueue {
+        &self.queue
+    }
+
+    pub fn publish(&self) -> &AmqpPublish {
+        &self.publish
+    }
+}

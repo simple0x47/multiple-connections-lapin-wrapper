@@ -7,3 +7,13 @@ pub struct Api {
     input: Vec<AmqpInputApi>,
     output: Vec<AmqpOutputApi>,
 }
+
+impl Api {
+    pub fn input(&self) -> &[AmqpInputApi] {
+        &self.input
+    }
+
+    pub fn output(&self) -> &[AmqpOutputApi] {
+        &self.output
+    }
+}

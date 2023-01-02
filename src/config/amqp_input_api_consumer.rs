@@ -8,3 +8,13 @@ pub struct AmqpInputApiConsumer {
     request: AmqpRequest,
     response: AmqpQueueConsumer,
 }
+
+impl AmqpInputApiConsumer {
+    pub fn request(&self) -> &AmqpRequest {
+        &self.request
+    }
+
+    pub fn response(&self) -> &AmqpQueueConsumer {
+        &self.response
+    }
+}

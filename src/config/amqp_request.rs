@@ -6,3 +6,13 @@ pub struct AmqpRequest {
     queue_name: String,
     publish: AmqpPublish,
 }
+
+impl AmqpRequest {
+    pub fn queue_name(&self) -> &str {
+        &self.queue_name
+    }
+
+    pub fn publish(&self) -> &AmqpPublish {
+        &self.publish
+    }
+}

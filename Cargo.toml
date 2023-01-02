@@ -1,6 +1,6 @@
 [package]
 name = "cooplan-lapin-wrapper"
-version = "0.1.3"
+version = "0.2.0"
 edition = "2021"
 license = "MIT"
 description = "Lapin wrapper for making AMQP connections easier to manage in Cooplan's microservices"

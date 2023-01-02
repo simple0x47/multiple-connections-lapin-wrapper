@@ -7,8 +7,8 @@ use async_recursion::async_recursion;
 use lapin::{Channel, Connection};
 use tokio::sync::watch::Sender;
 
+use crate::config::amqp_connect_config::AmqpConnectConfig;
 use crate::{
-    amqp_connect_config::AmqpConnectConfig,
     error::{Error, ErrorKind},
     state::State,
 };

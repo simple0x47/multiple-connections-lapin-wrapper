@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 pub struct AmqpInputApi {
     id: String,
     queue_consumer: AmqpQueueConsumer,
-    max_concurrent_requests: u32,
+    max_concurrent_requests: u16,
 }
 
 impl AmqpInputApi {
@@ -17,7 +17,7 @@ impl AmqpInputApi {
         &self.queue_consumer
     }
 
-    pub fn max_concurrent_requests(&self) -> u32 {
+    pub fn max_concurrent_requests(&self) -> u16 {
         self.max_concurrent_requests
     }
 }

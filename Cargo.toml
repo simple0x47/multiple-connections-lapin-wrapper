@@ -1,6 +1,6 @@
 [package]
 name = "cooplan-lapin-wrapper"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 license = "MIT"
 description = "Lapin wrapper for making AMQP connections easier to manage in Cooplan's microservices"
@@ -8,6 +8,9 @@ description = "Lapin wrapper for making AMQP connections easier to manage in Coo
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+
+# Proprietary dependencies
+cooplan-config-reader = "0.1.0"
 
 # Async runtime
 tokio = { version = "1", features = ["full"] }

@@ -4,8 +4,6 @@ use crate::error::{Error, ErrorKind};
 use cooplan_config_reader::reader::try_read;
 use serde::{Deserialize, Serialize};
 
-const API_FILE: &str = "api.json";
-
 #[derive(Deserialize, Serialize)]
 pub struct Api {
     input: Vec<AmqpInputApi>,
@@ -22,8 +20,8 @@ impl Api {
     }
 }
 
-pub async fn try_get() -> Result<Api, Error> {
-    match try_read(API_FILE).await {
+pub async fn try_get(api_file: &str) -> Result<Api, Error> {
+    match try_read(api_file).await {
         Ok(api) => Ok(api),
         Err(error) => Err(Error::new(
             ErrorKind::InternalFailure,

@@ -3,15 +3,19 @@ use std::sync::Arc;
 
 use lapin::{tcp::OwnedTLSConfig, Channel, ConnectionProperties};
 use tokio::sync::watch;
+use tokio::time::sleep;
 
+use crate::amqp_wrapper::AmqpWrapper;
 use crate::config::amqp_connect_config::AmqpConnectConfig;
-use crate::{amqp_wrapper::AmqpWrapper, state::State};
 
 #[cfg(test)]
 
+const AMQP_NAME: &str = "rabbitmq-100";
+const AMQP_WAIT_START_TIME: u64 = 5;
+const AMQP_STOP_TIME: &str = "1";
 const AMQP_URI: &str = "amqp://guest:guest@127.0.0.1:5672";
 
-fn initialize_rabbitmq() {
+async fn initialize_rabbitmq() {
     use std::process::Command;
 
     match Command::new("docker")
@@ -21,7 +25,7 @@ fn initialize_rabbitmq() {
             "-d",
             "--rm",
             "--name",
-            "rabbitmq",
+            AMQP_NAME,
             "-p",
             "5672:5672",
             "-p",
@@ -30,8 +34,22 @@ fn initialize_rabbitmq() {
         ])
         .output()
     {
-        Ok(_) => (),
+        Ok(_) => {
+            sleep(std::time::Duration::from_secs(AMQP_WAIT_START_TIME)).await;
+        }
         Err(error) => panic!("failed to initialize rabbitmq: {}", error),
+    }
+}
+
+async fn unitialize_rabbitmq() {
+    use std::process::Command;
+
+    match Command::new("docker")
+        .args(["stop", "-t", AMQP_STOP_TIME, AMQP_NAME])
+        .output()
+    {
+        Ok(_) => (),
+        Err(error) => panic!("failed to uninitialize rabbitmq: {}", error),
     }
 }
 
@@ -50,7 +68,7 @@ async fn create_channels(amqp_wrapper: &mut AmqpWrapper, amount: usize) -> Vec<A
 
 #[tokio::test]
 async fn test_massive_creation_of_channels() {
-    initialize_rabbitmq();
+    initialize_rabbitmq().await;
 
     let properties = ConnectionProperties::default();
     let tls = OwnedTLSConfig {
@@ -60,8 +78,7 @@ async fn test_massive_creation_of_channels() {
 
     let config = AmqpConnectConfig::new(AMQP_URI.to_string(), properties, tls);
 
-    let (sender, receiver) = watch::channel(State::Idle);
-    let mut amqp_wrapper = match AmqpWrapper::try_new(sender, config) {
+    let mut amqp_wrapper = match AmqpWrapper::try_new(config) {
         Ok(amqp_wrapper) => amqp_wrapper,
         Err(error) => panic!("failed to initialize amqp wrapper: {}", error),
     };
@@ -78,7 +95,5 @@ async fn test_massive_creation_of_channels() {
 
     create_channels(&mut amqp_wrapper, 1000).await;
 
-    if *receiver.borrow() != State::Alive {
-        panic!("amqp wrapper is not alive after creating a massive amount of channels")
-    }
+    unitialize_rabbitmq().await;
 }

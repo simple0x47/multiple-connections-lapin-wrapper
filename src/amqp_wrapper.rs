@@ -5,13 +5,9 @@ use std::{
 
 use async_recursion::async_recursion;
 use lapin::{Channel, Connection};
-use tokio::sync::watch::Sender;
 
 use crate::config::amqp_connect_config::AmqpConnectConfig;
-use crate::{
-    error::{Error, ErrorKind},
-    state::State,
-};
+use crate::error::{Error, ErrorKind};
 
 struct WrappedConnection {
     pub id: String,
@@ -40,29 +36,14 @@ impl From<Connection> for WrappedConnection {
 pub struct AmqpWrapper {
     connections: Vec<WrappedConnection>,
     channels_per_connection: HashMap<String, Vec<Weak<Channel>>>,
-    state_sender: Sender<State>,
     connect_config: AmqpConnectConfig,
 }
 
 impl AmqpWrapper {
-    pub fn try_new(
-        state_sender: Sender<State>,
-        connect_config: AmqpConnectConfig,
-    ) -> Result<AmqpWrapper, Error> {
-        match state_sender.send(State::Idle) {
-            Ok(_) => (),
-            Err(_) => {
-                return Err(Error::new(
-                    ErrorKind::StateUpdateFailure,
-                    "failed to update state",
-                ))
-            }
-        }
-
+    pub fn try_new(connect_config: AmqpConnectConfig) -> Result<AmqpWrapper, Error> {
         Ok(AmqpWrapper {
             connections: Vec::new(),
             channels_per_connection: HashMap::new(),
-            state_sender,
             connect_config,
         })
     }
@@ -77,14 +58,10 @@ impl AmqpWrapper {
         {
             Ok(connection) => connection.into(),
             Err(error) => {
-                let error = Error::new(
+                return Err(Error::new(
                     ErrorKind::InternalFailure,
                     format!("failed to connect: {}", error),
-                );
-
-                self.state_sender.send(State::Error(error.clone()));
-
-                return Err(error);
+                ));
             }
         };
 
@@ -111,14 +88,10 @@ impl AmqpWrapper {
         let last_connection = match self.connections.last() {
             Some(last_connection) => last_connection,
             None => {
-                let error = Error::new(
+                return Err(Error::new(
                     ErrorKind::InternalFailure,
                     "failed to get last connection after checking there are available connections",
-                );
-
-                self.state_sender.send(State::Error(error.clone()));
-
-                return Err(error);
+                ));
             }
         };
 
@@ -136,14 +109,10 @@ impl AmqpWrapper {
                 if error == lapin::Error::ChannelsLimitReached {
                     self.try_get_channel_from_new_connection().await?
                 } else {
-                    let error = Error::new(
+                    return Err(Error::new(
                         ErrorKind::InternalFailure,
                         format!("failed to create channel: {}", error),
-                    );
-
-                    self.state_sender.send(State::Error(error.clone()));
-
-                    return Err(error);
+                    ));
                 }
             }
         };
@@ -155,16 +124,6 @@ impl AmqpWrapper {
             None => {
                 self.channels_per_connection
                     .insert(connection_id, vec![channel_weak]);
-            }
-        }
-
-        match self.state_sender.send(State::Alive) {
-            Ok(_) => (),
-            Err(_) => {
-                return Err(Error::new(
-                    ErrorKind::StateUpdateFailure,
-                    "failed to update state",
-                ))
             }
         }
 

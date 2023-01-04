@@ -18,6 +18,7 @@ tokio-executor-trait = "2.1"
 tokio-reactor-trait = "1.1"
 async-recursion = "1.0"
 
+# AMQP
 lapin = "2.1"
 
 # Third party dependencies

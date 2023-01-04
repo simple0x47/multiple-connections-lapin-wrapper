@@ -2,7 +2,6 @@ use core::panic;
 use std::sync::Arc;
 
 use lapin::{tcp::OwnedTLSConfig, Channel, ConnectionProperties};
-use tokio::sync::watch;
 use tokio::time::sleep;
 
 use crate::amqp_wrapper::AmqpWrapper;

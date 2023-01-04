@@ -1,7 +1,7 @@
 use crate::config::amqp_queue_declare::AmqpQueueDeclare;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Clone)]
 pub struct AmqpQueue {
     name: String,
     declare: AmqpQueueDeclare,

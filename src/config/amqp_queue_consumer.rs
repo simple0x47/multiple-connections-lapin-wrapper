@@ -4,7 +4,7 @@ use crate::config::amqp_queue::AmqpQueue;
 use lapin::options::{BasicAckOptions, BasicRejectOptions};
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Clone)]
 pub struct AmqpQueueConsumer {
     queue: AmqpQueue,
     qos: AmqpQos,

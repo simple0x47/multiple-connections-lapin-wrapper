@@ -1,7 +1,7 @@
 use lapin::options::BasicQosOptions;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Clone)]
 pub struct AmqpQos {
     prefetch_count: u16,
     options: BasicQosOptions,

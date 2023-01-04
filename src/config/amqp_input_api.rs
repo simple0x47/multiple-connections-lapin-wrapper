@@ -1,7 +1,7 @@
 use crate::config::amqp_queue_consumer::AmqpQueueConsumer;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Clone)]
 pub struct AmqpInputApi {
     id: String,
     queue_consumer: AmqpQueueConsumer,

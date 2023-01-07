@@ -345,6 +345,30 @@ impl<'de> Deserialize<'de> for AmqpConnectConfig {
     }
 }
 
+impl Clone for AmqpConnectConfig {
+    fn clone(&self) -> Self {
+        let identity = self
+            .owned_tls_config
+            .identity
+            .as_ref()
+            .map(|identity| OwnedIdentity {
+                der: identity.der.clone(),
+                password: identity.password.clone(),
+            });
+
+        let owned_tls_config = OwnedTLSConfig {
+            identity,
+            cert_chain: self.owned_tls_config.cert_chain.clone(),
+        };
+
+        AmqpConnectConfig {
+            uri: self.uri.clone(),
+            options: self.options.clone(),
+            owned_tls_config,
+        }
+    }
+}
+
 #[cfg(test)]
 #[tokio::test]
 async fn deserialize_correctly_from_without_owned_tls_config() {

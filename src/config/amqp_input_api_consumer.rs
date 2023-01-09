@@ -7,6 +7,7 @@ pub struct AmqpInputApiConsumer {
     id: String,
     request: AmqpRequest,
     response: AmqpQueueConsumer,
+    wait_for_response_timeout_after_seconds: u64,
 }
 
 impl AmqpInputApiConsumer {
@@ -20,5 +21,9 @@ impl AmqpInputApiConsumer {
 
     pub fn response(&self) -> &AmqpQueueConsumer {
         &self.response
+    }
+
+    pub fn wait_for_response_timeout_after_seconds(&self) -> u64 {
+        self.wait_for_response_timeout_after_seconds
     }
 }

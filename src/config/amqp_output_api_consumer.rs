@@ -11,6 +11,7 @@ pub struct AmqpOutputApiConsumer {
     consume: AmqpConsume,
     acknowledge: BasicAckOptions,
     reject: BasicRejectOptions,
+    timeout_after_seconds: u64,
 }
 
 impl AmqpOutputApiConsumer {
@@ -36,5 +37,9 @@ impl AmqpOutputApiConsumer {
 
     pub fn reject(&self) -> &BasicRejectOptions {
         &self.reject
+    }
+    
+    pub fn timeout_after_seconds(&self) -> u64 {
+        self.timeout_after_seconds
     }
 }
